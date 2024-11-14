@@ -15,7 +15,7 @@ app.get('/estudiantes/:carrera', (req, res) => {
     res.send('Servidor Express contestando petición GET en /estudiantes/:carrera');
 });
 
-app.post('/maestros', (req, res) => {
+app.get('/maestros', (req, res) => {
     console.log('Body params:', req.body);
     res.send('Servidor Express contestando petición POST en /maestros');
 });
