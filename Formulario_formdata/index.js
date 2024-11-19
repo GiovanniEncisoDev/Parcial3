@@ -1,43 +1,26 @@
-const express = require('express');
+const express =require('express');
 const path = require('path');
-const multer = require('multer');
+const multer =require('multer');
+const cors  = require('cors');
 const app = express();
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, 'archivos'));
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname); 
-    }
-});
-
-const upload = multer({ storage: storage });
+const folder = path.join(__dirname+'archivos/');
+const upload = multer(dest:folder);
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.text());
+app.use(upload.single('archivo'));
+app.use(cors());
 
-app.post('/formulario', upload.single('archivo'), (req, res) => {    
-    console.log('Datos del formulario:', req.body);
-    console.log('Archivo recibido:', req.file);
-
-    if (!req.file) {
-        return res.status(400).send('No se recibió ningún archivo.');
-    }
-
-    res.send(`Hola ${req.body.nombre}, archivo ${req.file.originalname} recibido exitosamente.`);
-});
+app.post('formlario', (req,res)=>{
+    console.log(req.body);
+    res.send('Hola ${req.body.nombres}');
+})
 
 app.listen(8080, () => {
     console.log('Servidor Express escuchando en puerto 8080');
 });
 
-/*
-if(err){
-    next(err);
-    return;
-}
+.catch(err => console.log("ocurrio un error"+err.message));
 
-app.use((err,req,res,next)=>{
-
-}) */
+diskStorage
