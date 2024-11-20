@@ -43,13 +43,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// Endpoint para recibir datos del formulario
 app.post('/formulario', upload.single('archivo'), (req, res) => {
     try {
         console.log('Datos del formulario:', req.body);
         console.log('Archivo subido:', req.file);
-
-        // Crear un archivo PDF personalizado
+        
         const pdfPath = path.join(pdfFolder, 'a4.pdf');
         const doc = new jsPDF();
         doc.text(`Hola ${req.body.nombres}, gracias por enviar tu archivo.`, 10, 10);
@@ -77,7 +75,6 @@ app.post('/formulario', upload.single('archivo'), (req, res) => {
     }
 });
 
-// Iniciar el servidor
 app.listen(8080, () => {
     console.log('Servidor Express escuchando en puerto 8080');
 });
