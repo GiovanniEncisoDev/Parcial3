@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf', 'text/plain'];
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (allowedTypes.includes(file.mimetype)) {
             cb(null, true);
         } else {
@@ -53,6 +53,20 @@ app.post('/formulario', upload.single('archivo'), (req, res) => {
         const pdfPath = path.join(pdfFolder, 'a4.pdf');
         const doc = new jsPDF();
         doc.text(`Hola ${req.body.nombres}, gracias por enviar tu archivo.`, 10, 10);
+
+        // Si el archivo es una imagen, agregarla al PDF
+        if (req.file && req.file.mimetype.startsWith('image')) {
+            const imagePath = path.join(uploadFolder, req.file.filename);
+
+            // Leer la imagen como base64
+            const imageData = fs.readFileSync(imagePath, { encoding: 'base64' });
+            const imageFormat = req.file.mimetype.split('/')[1]; // Obtener el formato (jpeg, png, etc.)
+
+            // Agregar la imagen al PDF
+            doc.addImage(imageData, imageFormat.toUpperCase(), 10, 20, 180, 160); // Ajustar posición y tamaño
+        }
+
+        // Guardar el PDF
         doc.save(pdfPath);
 
         // Enviar el PDF como respuesta al cliente
