@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="wrapper"></div>
+
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <script src="src/index.js"></script>
+
+    <script>
+    const grid = new gridjs.Grid({
+        columns: ['Title', 'Director', 'Producer'],
+        server: {
+          url: 'http://localhost:8080/usuarioALL',
+          then: resp => resp.map(movie => [movie.title, movie.director, movie.producer]
+          )
+        } 
+      });
+      grid.render(document.getElementById("wrapper"));
+      </script>
+  </body>
+</html>
