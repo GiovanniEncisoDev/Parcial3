@@ -1,0 +1,38 @@
+[
+    {
+      "nombre": "Benito Juárez",
+      "periodo": "1858-1872",
+      "partido": "Liberal",
+      "fecha_nacimiento": "1806-03-21",
+      "lugar_nacimiento": "San Pablo Guelatao, Oaxaca"
+    },
+    {
+      "nombre": "Porfirio Díaz",
+      "periodo": "1876-1880, 1884-1911",
+      "partido": "Liberal",
+      "fecha_nacimiento": "1830-09-15",
+      "lugar_nacimiento": "Oaxaca de Juárez, Oaxaca"
+    },
+    {
+      "nombre": "Francisco I. Madero",
+      "periodo": "1911-1913",
+      "partido": "Partido Constitucional Progresista",
+      "fecha_nacimiento": "1873-10-30",
+      "lugar_nacimiento": "Parras de la Fuente, Coahuila"
+    },
+    {
+      "nombre": "Lázaro Cárdenas",
+      "periodo": "1934-1940",
+      "partido": "Partido Nacional Revolucionario",
+      "fecha_nacimiento": "1895-05-21",
+      "lugar_nacimiento": "Jiquilpan, Michoacán"
+    },
+    {
+      "nombre": "Andrés Manuel López Obrador",
+      "periodo": "2018-2024",
+      "partido": "Morena",
+      "fecha_nacimiento": "1953-11-13",
+      "lugar_nacimiento": "Tepetitán, Tabasco"
+    }
+  ]
+  
