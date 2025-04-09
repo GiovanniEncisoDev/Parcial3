@@ -17,61 +17,6 @@
 
   <div id="contenedor"></div>
 
-  <script>
-    let presidentes = [];
-
-    // Función para renderizar la lista
-    function mostrarPresidentes() {
-      const contenedor = document.getElementById('contenedor');
-      contenedor.innerHTML = ''; // Limpiar contenido anterior
-
-      let lista = document.createElement('ul');
-      presidentes.forEach(presidente => {
-        let item = document.createElement('li');
-        let texto = document.createTextNode(
-          `Nombre: ${presidente.nombre}, Lugar de nacimiento: ${presidente.lugar_nacimiento}`
-        );
-        item.appendChild(texto);
-        lista.appendChild(item);
-      });
-
-      contenedor.appendChild(lista);
-    }
-
-    // Cargar el archivo JSON 
-    fetch('_Presidentes.json')
-      .then(response => response.json())
-      .then(data => {
-        presidentes = data; // Guardar datos en variable
-        mostrarPresidentes(); // Mostrar lista inicial
-      })
-      .catch(error => {
-        console.error('Error al cargar el JSON:', error);
-      });
-
-    // Agregar nuevo presidente
-    document.getElementById('agregarBtn').addEventListener('click', () => {
-      const nombre = document.getElementById('nombre').value.trim();
-      const lugar = document.getElementById('lugar').value.trim();
-
-      if (nombre && lugar) {
-        // Crear nuevo objeto presidente con los campos básicos
-        const nuevoPresidente = {
-          nombre: nombre,
-          lugar_nacimiento: lugar
-        };
-
-        // Agregar a la lista
-        presidentes.push(nuevoPresidente);
-        mostrarPresidentes(); // Volver a mostrar lista
-
-        // Limpiar inputs
-        document.getElementById('nombre').value = '';
-        document.getElementById('lugar').value = '';
-      } else {
-        alert('Por favor, llena ambos campos');
-      }
-    });
-  </script>
+  <script src="Script.js"></script>
 </body>
 </html>
