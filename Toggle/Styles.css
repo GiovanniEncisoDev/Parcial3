@@ -1,0 +1,57 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Imagen como fondo exacto del grid */
+.fondo {
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+/* Contenedor del grid */
+.contenedor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 450px;
+  height: 500px;
+  display: grid;
+  grid-template-columns: repeat(3, 150px);
+  grid-template-rows: repeat(3, 150px) 50px;
+  z-index: 1;
+}
+
+/* Cada celda */
+.caja {
+  background-color: aqua;
+  border: 1px solid red;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Al hacer clic se vuelve transparente */
+.caja.cajaClick {
+  opacity: 0;
+}
+
+/* Botones abajo */
+.cajaBoton {
+  width: 150px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
