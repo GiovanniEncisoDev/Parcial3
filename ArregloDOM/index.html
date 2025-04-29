@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla Dinámica</title>
+</head>
+<body>
+    <div id="contenedor"></div>
+
+    <script>
+        let encabezados = ['Nombre', 'Paterno', 'Materno'];
+        let datos = [
+            { nombre: "AndresM", paterno: "Lopez", materno: "Obrador" },
+            { nombre: "Enrique", paterno: "Peña", materno: "Nieto" },
+            { nombre: "Vicente", paterno: "Fox", materno: "Quezada" }
+        ];
+
+        function crearTabla(encabezados, datos) {
+            let tabla = document.createElement('table');
+            tabla.border = '1';
+            tabla.style.borderCollapse = 'collapse';
+            tabla.style.margin = '10px 0';
+
+            // Crear encabezados
+            let thead = document.createElement('thead');
+            let filaEncabezado = document.createElement('tr');
+            encabezados.forEach(encabezado => {
+                let th = document.createElement('th');
+                th.textContent = encabezado;
+                th.style.padding = '5px 10px';
+                filaEncabezado.appendChild(th);
+            });
+            thead.appendChild(filaEncabezado);
+            tabla.appendChild(thead);
+
+            // Crear filas de datos
+            let tbody = document.createElement('tbody');
+            datos.forEach(persona => {
+                let fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${persona.nombre}</td>
+                    <td>${persona.paterno}</td>
+                    <td>${persona.materno}</td>
+                `;
+                tbody.appendChild(fila);
+            });
+            tabla.appendChild(tbody);
+
+            // Agregar tabla al contenedor
+            document.getElementById('contenedor').appendChild(tabla);
+        }
+
+        crearTabla(encabezados, datos);
+    </script>
+</body>
+</html>
