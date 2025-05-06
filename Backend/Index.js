@@ -1,10 +1,13 @@
 const express = require('express');
+var morgan = require('morgan')
 const app = express();
 
 app.use(express.json()); // Middleware para parsear el cuerpo de las peticiones JSON
 /*app.use(express.text()); // Middleware para parsear el cuerpo de las peticiones de texto
 app.use( () => {} );
 */
+app.use(morgan('dev')) // Middleware para registrar las peticiones HTTP en la consola
+
 
 app.get('/peliculas', (req, res) => {
   console.log(req.query);
