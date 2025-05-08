@@ -1,0 +1,26 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Películas Favoritas</title>
+</head>
+<body>
+  <h1>Películas Favoritas</h1>
+  <ul id="lista"></ul>
+
+  <script>
+    fetch('http://localhost:3000/peliculas')
+      .then(res => res.json())
+      .then(data => {
+        const lista = document.getElementById('lista');
+        data.forEach(peli => {
+          const item = document.createElement('li');
+          item.textContent = `${peli.titulo} (${peli.anio}) - ${peli.director}`;
+          lista.appendChild(item);
+        });
+      });
+  </script>
+</body>
+</html>
