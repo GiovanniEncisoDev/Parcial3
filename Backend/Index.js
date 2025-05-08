@@ -1,25 +1,18 @@
-// =========================
-// Importar dependencias
-// =========================
+// ========================= Importar dependencias =========================
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 
-// =========================
-// Crear instancia de Express
-// =========================
+// ========================= Crear instancia de Express =========================
 const app = express();
 
-// =========================
-// Middlewares
-// =========================
+// ========================= Middlewares =========================
 app.use(express.json());         // Parsear cuerpos JSON
 app.use(morgan('combined'));     // Registrar peticiones HTTP en consola
 app.use(cors());                 // Habilitar CORS
 app.use(express.urlencoded({ extended: true })); // Parsear cuerpos URL-encoded
-// =========================
-// Rutas
-// =========================
+
+// ========================= Rutas =========================
 
 // Obtener películas
 app.get('/peliculas', (req, res) => {
@@ -45,16 +38,12 @@ app.delete('/peliculas/:id', (req, res) => {
   res.send('Eliminado');
 });
 
-// =========================
-// Middleware para rutas no encontradas
-// =========================
+// ========================= Middleware para rutas no encontradas =========================
 app.use((req, res) => {
   res.status(404).send('Ruta no encontrada');
 });
 
-// =========================
-// Iniciar el servidor
-// =========================
+// ========================= Iniciar el servidor =========================
 app.listen(3000, () => {
   console.log('Servidor ejecutándose en el puerto 3000');
 });
