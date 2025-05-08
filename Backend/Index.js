@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());         // Parsear cuerpos JSON
 app.use(morgan('combined'));     // Registrar peticiones HTTP en consola
 app.use(cors());                 // Habilitar CORS
-
+app.use(express.urlencoded({ extended: true })); // Parsear cuerpos URL-encoded
 // =========================
 // Rutas
 // =========================
