@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventario de Medicamentos</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>Inventario de Medicamentos</h1>
+
+  <section id="formulario">
+    <h2>Agregar Medicamento</h2>
+    <form id="medicamentoForm">
+      <input type="text" id="nombre" placeholder="Nombre del medicamento" required />
+      <input type="text" id="descripcion" placeholder="Descripción" />
+      <input type="text" id="dosis" placeholder="Dosis" />
+      <button type="submit">Agregar</button>
+    </form>
+  </section>
+
+  <section id="lista">
+    <h2>Lista de Medicamentos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Dosis</th>
+        </tr>
+      </thead>
+      <tbody id="tablaMedicamentos">
+        <!-- Aquí se mostrarán los medicamentos -->
+      </tbody>
+    </table>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
