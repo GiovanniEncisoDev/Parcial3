@@ -1,19 +1,22 @@
 // ========================= Importar dependencias =========================
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const mysql = require('mysql2/promise');
+const { Pool } = require('pg');
 
 // ========================= Configuración =========================
-const APP_PORT = 3000;           // Puerto para el servidor Express
-const MYSQL_PORT = 3306;         // Puerto de MySQL (WampServer por defecto)
-const MYSQL_CONFIG = {
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  port: MYSQL_PORT,
-  database: 'db_20100192',
-};
+const APP_PORT = process.env.PORT || 3000;
+const pool = new Pool({
+  host: process.env.PG_HOST,
+  port: process.env.PG_PORT,
+  user: process.env.PG_USER,
+  password: process.env.PG_PASSWORD,
+  database: process.env.PG_DATABASE,
+  ssl: {
+    rejectUnauthorized: false // Necesario para Supabase
+  }
+});
 
 // ========================= Crear instancia de Express =========================
 const app = express();
@@ -23,8 +26,6 @@ app.use(express.json());
 app.use(morgan('combined'));
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
-
-// Servir archivos estáticos (HTML, JS, imágenes, etc.)
 app.use(express.static('public'));
 
 // ========================= Rutas =========================
@@ -32,10 +33,8 @@ app.use(express.static('public'));
 // Obtener películas
 app.get('/peliculas', async (req, res) => {
   try {
-    const connection = await mysql.createConnection(MYSQL_CONFIG);
-    const [peliculas] = await connection.query('SELECT * FROM peliculas');
-    await connection.end();
-    res.json(peliculas);
+    const result = await pool.query('SELECT * FROM peliculas ORDER BY idPelicula');
+    res.json(result.rows);
   } catch (err) {
     console.error('Error al conectar con la base de datos:', err);
     res.status(500).json({ error: 'Error en el servidor o base de datos' });
@@ -46,13 +45,11 @@ app.get('/peliculas', async (req, res) => {
 app.post('/peliculas', async (req, res) => {
   const { titulo, director, genero, anio, imagen, url } = req.body;
   try {
-    const connection = await mysql.createConnection(MYSQL_CONFIG);
     const query = `
       INSERT INTO peliculas (titulo, director, genero, anio, imagen, url)
-      VALUES (?, ?, ?, ?, ?, ?)
+      VALUES ($1, $2, $3, $4, $5, $6)
     `;
-    await connection.query(query, [titulo, director, genero, anio, imagen, url]);
-    await connection.end();
+    await pool.query(query, [titulo, director, genero, anio, imagen, url]);
     res.status(201).json({ mensaje: 'Película agregada exitosamente' });
   } catch (err) {
     console.error(err);
@@ -60,16 +57,17 @@ app.post('/peliculas', async (req, res) => {
   }
 });
 
-
 // Modificar una película
 app.patch('/peliculas/:id', async (req, res) => {
   const { id } = req.params;
   const { titulo, director, genero, anio } = req.body;
   try {
-    const connection = await mysql.createConnection(MYSQL_CONFIG);
-    const query = 'UPDATE peliculas SET titulo = ?, director = ?, genero = ?, anio = ? WHERE idPelicula = ?';
-    await connection.query(query, [titulo, director, genero, anio, id]);
-    await connection.end();
+    const query = `
+      UPDATE peliculas
+      SET titulo = $1, director = $2, genero = $3, anio = $4
+      WHERE idPelicula = $5
+    `;
+    await pool.query(query, [titulo, director, genero, anio, id]);
     res.json({ mensaje: 'Película actualizada exitosamente' });
   } catch (err) {
     console.error(err);
@@ -81,10 +79,7 @@ app.patch('/peliculas/:id', async (req, res) => {
 app.delete('/peliculas/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const connection = await mysql.createConnection(MYSQL_CONFIG);
-    const query = 'DELETE FROM peliculas WHERE idPelicula = ?';
-    await connection.query(query, [id]);
-    await connection.end();
+    await pool.query('DELETE FROM peliculas WHERE idPelicula = $1', [id]);
     res.json({ mensaje: 'Película eliminada exitosamente' });
   } catch (err) {
     console.error(err);
