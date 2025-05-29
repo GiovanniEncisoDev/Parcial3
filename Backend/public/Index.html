@@ -13,15 +13,14 @@
   <div class="formulario">
     <h2>Agregar / Modificar Película</h2>
     <form id="formAgregar">
-      <input type="hidden" id="idPelicula">
       <input type="text" id="titulo" placeholder="Título" required>
       <input type="text" id="director" placeholder="Director" required>
       <input type="text" id="genero" placeholder="Género" required>
       <input type="number" id="anio" placeholder="Año" required>
       <input type="text" id="imagen" placeholder="URL de imagen">
-      <input type="text" id="url" placeholder="URL de información o tráiler">
-      <button type="submit">Agregar</button>
-      <button type="button" onclick="modificarPelicula()">Modificar</button>
+      <input type="text" id="url" placeholder="URL del tráiler o info">
+      <button id="btnGuardar" type="submit">Agregar</button>
+      <button id="btnCancelar" style="display:none;">Cancelar</butto>
     </form>
   </div>
 
