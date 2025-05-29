@@ -60,15 +60,14 @@ app.post('/peliculas', async (req, res) => {
   }
 });
 
-
 // Modificar una película
 app.patch('/peliculas/:id', async (req, res) => {
   const { id } = req.params;
-  const { titulo, director, genero, anio } = req.body;
+  const { titulo, director, genero, anio, imagen, url } = req.body;
   try {
     const connection = await mysql.createConnection(MYSQL_CONFIG);
-    const query = 'UPDATE peliculas SET titulo = ?, director = ?, genero = ?, anio = ? WHERE idPelicula = ?';
-    await connection.query(query, [titulo, director, genero, anio, id]);
+    const query = 'UPDATE peliculas SET titulo = ?, director = ?, genero = ?, anio = ?, imagen = ?, url = ? WHERE idPelicula = ?';
+    await connection.query(query, [titulo, director, genero, anio, imagen, url, id]);
     await connection.end();
     res.json({ mensaje: 'Película actualizada exitosamente' });
   } catch (err) {

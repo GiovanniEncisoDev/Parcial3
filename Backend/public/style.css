@@ -112,3 +112,34 @@ button:hover {
   td:nth-of-type(7):before { content: "URL"; }
   td:nth-of-type(8):before { content: "Acciones"; }
 }
+
+.contenedor-principal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Estilo para el formulario */
+.formulario {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Estilo para la tabla */
+.tabla {
+  flex: 2;
+  min-width: 400px;
+}
+
+/* Botones de acción */
+td button {
+  margin-right: 5px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+/* Aseguramos que los botones estén en fila */
+td {
+  white-space: nowrap;
+}
+
