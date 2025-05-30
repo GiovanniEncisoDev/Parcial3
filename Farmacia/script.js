@@ -1,5 +1,19 @@
-document.addEventListener('DOMContentLoaded', cargarProductos);
-document.getElementById('form-producto').addEventListener('submit', agregarProducto);
+document.addEventListener('DOMContentLoaded', () => {
+    cargarProductos();
+
+    document.getElementById('form-producto').addEventListener('submit', agregarProducto);
+
+    // Toggle sidebar
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('active');
+    });
+
+    // Toggle user dropdown
+    document.getElementById('user-menu-toggle').addEventListener('click', () => {
+        const menu = document.getElementById('dropdown-menu');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+});
 
 function cargarProductos() {
     fetch('obtener_productos.php')
