@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -11,6 +15,8 @@ header {
     background: #2c3e50;
     color: white;
     padding: 10px 20px;
+    position: relative;
+    z-index: 2;
 }
 
 .hamburger {
@@ -29,6 +35,7 @@ header {
 
 .user-details {
     text-align: right;
+    font-size: 14px;
 }
 
 .user-photo {
@@ -42,6 +49,14 @@ header {
     position: relative;
 }
 
+.dropdown button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 .dropdown-menu {
     display: none;
     position: absolute;
@@ -52,8 +67,8 @@ header {
     border: 1px solid #ccc;
     list-style: none;
     padding: 5px 0;
-    width: 120px;
-    z-index: 100;
+    width: 130px;
+    z-index: 99;
 }
 
 .dropdown-menu li {
@@ -75,12 +90,17 @@ header {
     color: white;
     transition: left 0.3s ease;
     padding-top: 60px;
-    z-index: 99;
+    z-index: 1;
+}
+
+.sidebar.active {
+    left: 0;
 }
 
 .sidebar ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .sidebar ul li {
@@ -92,17 +112,13 @@ header {
     background: #2c3e50;
 }
 
-.sidebar.active {
-    left: 0;
-}
-
 main {
     margin-left: 0;
     padding: 20px;
     transition: margin-left 0.3s ease;
 }
 
-.sidebar.active + main {
+.sidebar.active ~ #main-content {
     margin-left: 200px;
 }
 

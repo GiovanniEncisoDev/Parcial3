@@ -6,16 +6,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Menú lateral -->
-    <div class="sidebar" id="sidebar">
-        <ul>
-            <li>Productos</li>
-            <li>Proveedores</li>
-            <li>Departamentos</li>
-            <li>Usuarios</li>
-        </ul>
-    </div>
-
     <!-- Encabezado superior -->
     <header>
         <button id="menu-toggle" class="hamburger">☰</button>
@@ -25,7 +15,7 @@
                 <span>Empleado: 12345</span>
             </div>
             <div class="user-photo"></div>
-            <div class="dropdown" id="user-dropdown">
+            <div class="dropdown">
                 <button id="user-menu-toggle">▼</button>
                 <ul class="dropdown-menu" id="dropdown-menu">
                     <li>Cerrar sesión</li>
@@ -34,7 +24,17 @@
         </div>
     </header>
 
-    <main>
+    <!-- Menú lateral -->
+    <nav class="sidebar" id="sidebar">
+        <ul>
+            <li>Productos</li>
+            <li>Proveedores</li>
+            <li>Departamentos</li>
+            <li>Usuarios</li>
+        </ul>
+    </nav>
+
+    <main id="main-content">
         <h1>Inventario de Productos</h1>
 
         <form id="form-producto">
