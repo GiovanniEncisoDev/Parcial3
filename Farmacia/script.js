@@ -14,6 +14,48 @@ document.addEventListener('DOMContentLoaded', () => {
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     });
 });
+document.getElementById('btn-departamentos').addEventListener('click', () => {
+    mostrarSeccion('seccion-departamentos');
+    fetch('obtener_departamentos.php')
+        .then(res => res.json())
+        .then(data => {
+            const tabla = document.getElementById('tabla-departamentos');
+            tabla.innerHTML = '';
+            data.forEach(dep => {
+                tabla.innerHTML += `<tr>
+                    <td>${dep.codigo}</td>
+                    <td>${dep.departamento}</td>
+                </tr>`;
+            });
+        });
+});
+
+document.getElementById('btn-proveedores').addEventListener('click', () => {
+    mostrarSeccion('seccion-proveedores');
+    fetch('obtener_proveedores.php')
+        .then(res => res.json())
+        .then(data => {
+            const tabla = document.getElementById('tabla-proveedores');
+            tabla.innerHTML = '';
+            data.forEach(prov => {
+                tabla.innerHTML += `<tr>
+                    <td>${prov.codigo}</td>
+                    <td>${prov.nombre_empresa}</td>
+                    <td>${prov.rfc}</td>
+                    <td>${prov.direccion}</td>
+                    <td>${prov.telefono}</td>
+                    <td>${prov.ciudad}</td>
+                </tr>`;
+            });
+        });
+});
+
+function mostrarSeccion(id) {
+    document.querySelectorAll('section').forEach(sec => {
+        sec.classList.add('seccion-oculta');
+    });
+    document.getElementById(id).classList.remove('seccion-oculta');
+}
 
 function cargarProductos() {
     fetch('obtener_productos.php')

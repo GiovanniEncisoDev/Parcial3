@@ -61,8 +61,37 @@
             </thead>
             <tbody id="tabla-productos"></tbody>
         </table>
-    </main>
+        <section id="seccion-departamentos" class="seccion-oculta">
+    <h2>Departamentos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-departamentos"></tbody>
+    </table>
+</section>
 
+<section id="seccion-proveedores" class="seccion-oculta">
+    <h2>Proveedores</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Empresa</th>
+                <th>RFC</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Ciudad</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-proveedores"></tbody>
+    </table>
+</section>
+
+    </main>
     <script src="script.js"></script>
 </body>
 </html>

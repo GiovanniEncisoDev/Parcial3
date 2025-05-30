@@ -157,3 +157,11 @@ th, td {
     border: 1px solid #ddd;
     text-align: center;
 }
+
+.seccion-oculta {
+    display: none;
+}
+
+section {
+    margin-top: 20px;
+}
