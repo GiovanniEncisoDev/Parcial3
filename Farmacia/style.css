@@ -165,3 +165,7 @@ th, td {
 section {
     margin-top: 20px;
 }
+
+.shifted {
+    margin-left: 200px;
+}
