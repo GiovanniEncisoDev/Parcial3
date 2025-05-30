@@ -1,5 +1,8 @@
 const API_URL = 'http://localhost:3000/peliculas';
 
+let modoEdicion = false;
+let idEditar = null;
+
 async function cargarPeliculas() {
   const res = await fetch(API_URL);
   const peliculas = await res.json();
@@ -17,7 +20,10 @@ async function cargarPeliculas() {
       <td>${p.anio}</td>
       <td><img src="${p.imagen || ''}" alt="img" width="50"></td>
       <td><a href="${p.url || '#'}" target="_blank">Ver</a></td>
-      <td><button onclick="eliminar(${p.idPelicula})">Eliminar</button></td>
+      <td>
+        <button onclick="eliminar(${p.idPelicula})">Eliminar</button>
+        <button onclick='prepararEdicion(${JSON.stringify(p)})'>Modificar</button>
+      </td>
     `;
     tbody.appendChild(fila);
   });
@@ -25,6 +31,7 @@ async function cargarPeliculas() {
 
 document.getElementById('formAgregar').addEventListener('submit', async (e) => {
   e.preventDefault();
+
   const data = {
     titulo: document.getElementById('titulo').value,
     director: document.getElementById('director').value,
@@ -34,19 +41,52 @@ document.getElementById('formAgregar').addEventListener('submit', async (e) => {
     url: document.getElementById('url').value,
   };
 
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
+  if (!modoEdicion) {
+    // Agregar nueva
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
 
-  if (res.ok) {
-    cargarPeliculas();
-    e.target.reset();
+    if (res.ok) {
+      cargarPeliculas();
+      e.target.reset();
+    } else {
+      alert('Error al agregar la película');
+    }
   } else {
-    alert('Error al agregar la película');
+    // Modificar existente
+    const res = await fetch(`${API_URL}/${idEditar}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      cargarPeliculas();
+      e.target.reset();
+      document.querySelector('#formAgregar button').textContent = 'Agregar';
+      modoEdicion = false;
+      idEditar = null;
+    } else {
+      alert('Error al modificar la película');
+    }
   }
 });
+
+function prepararEdicion(pelicula) {
+  document.getElementById('titulo').value = pelicula.titulo;
+  document.getElementById('director').value = pelicula.director;
+  document.getElementById('genero').value = pelicula.genero;
+  document.getElementById('anio').value = pelicula.anio;
+  document.getElementById('imagen').value = pelicula.imagen || '';
+  document.getElementById('url').value = pelicula.url || '';
+
+  modoEdicion = true;
+  idEditar = pelicula.idPelicula;
+  document.querySelector('#formAgregar button').textContent = 'Guardar cambios';
+}
 
 async function eliminar(id) {
   if (!confirm('¿Estás seguro de eliminar esta película?')) return;
