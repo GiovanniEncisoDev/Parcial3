@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejemplo Librería Modo Oscuro</title>
+  <link rel="stylesheet" href="estilos.css"> <!-- opcional para estilo extra -->
+  <style>
+    body {
+      background-color: white;
+      color: black;
+      font-family: Arial, sans-serif;
+      transition: all 0.3s;
+      padding: 20px;
+    }
+
+    body.dark {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+
+    pre {
+      background: #eee;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+
+    body.dark pre {
+      background: #1e1e1e;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ejemplo de Librería: Modo Oscuro</h1>
+
+  <p>Esta página demuestra cómo funciona nuestra librería independiente <code>modo-oscuro.js</code>.</p>
+
+  <h2>Cómo usar la librería:</h2>
+  <ol>
+    <li>Incluir el archivo JS en tu página: <code>&lt;script src="modo-oscuro.js"&gt;&lt;/script&gt;</code></li>
+    <li>Inicializarla con <code>toggleDarkMode.init();</code></li>
+  </ol>
+
+  <h2>Ejemplo de código interno:</h2>
+  <pre>
+const toggleDarkMode = (() => {
+  function toggle() {
+    document.body.classList.toggle("dark");
+  }
+  return { toggle };
+})();
+  </pre>
+
+  <p>Pulsa el botón flotante 🌙 para cambiar entre modo claro y oscuro.</p>
+
+  <script src="modo-oscuro.js"></script>
+  <script>
+    // Inicializamos la librería
+    toggleDarkMode.init();
+  </script>
+</body>
+</html>

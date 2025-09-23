@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCR Beta CURP</title>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
+  <script src="ocr.js"></script>
+  <link rel="stylesheet" href="estilos.css">
+  <style>
+    #preview img { max-width: 400px; display: block; margin-bottom: 10px; }
+    #output span { margin-right: 4px; padding: 2px; }
+  </style>
+</head>
+<body>
+  <h1>OCR Beta - CURP</h1>
+
+  <p>Sube una imagen o PDF (convertido a imagen) de tu CURP. El texto reconocido se mostrará y podrás editarlo si algo está mal.</p>
+
+  <input type="file" id="archivo" accept="image/*,application/pdf">
+  <div id="preview"></div>
+  <div id="output"></div>
+
+  <script>
+    OCRComponent.init({
+      inputId: "archivo",
+      outputId: "output",
+      previewId: "preview"
+    });
+  </script>
+</body>
+</html>

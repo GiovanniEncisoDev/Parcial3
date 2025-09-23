@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tareas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Tareas</h1>
+
+        <div id="notification" class="notification"></div>
+
+        <form id="task-form">
+            <input type="text" id="task-input" placeholder="Nueva tarea..." required>
+            <input type="date" id="task-date" required>
+            <select id="task-priority">
+                <option value="alta">Alta</option>
+                <option value="media" selected>Media</option>
+                <option value="baja">Baja</option>
+            </select>
+            <button type="submit">Agregar</button>
+        </form>
+
+        <input type="text" id="task-search" placeholder="Buscar tarea...">
+
+        <div class="filters">
+            <button data-filter="all" class="active">Todas</button>
+            <button data-filter="pending">Pendientes</button>
+            <button data-filter="overdue">Vencidas</button>
+            <button data-filter="completed">Completadas</button>
+        </div>
+
+        <ul id="task-list"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
