@@ -34,11 +34,13 @@
 <body>
   <h1>Ejemplo de Librería: Modo Oscuro</h1>
 
-  <p>Esta página demuestra cómo funciona nuestra librería independiente <code>modo-oscuro.js</code>.</p>
+  <p>Esta página demuestra cómo funciona la librería de forma independiente <code>modo-oscuro.js</code>.</p>
+
+  <p>Pulsa el botón flotante 🌙 para cambiar entre modo claro y oscuro.</p>
 
   <h2>Cómo usar la librería:</h2>
   <ol>
-    <li>Incluir el archivo JS en tu página: <code>&lt;script src="modo-oscuro.js"&gt;&lt;/script&gt;</code></li>
+    <li>Incluir el archivo JS en el proyecto: <code>&lt;script src="modo-oscuro.js"&gt;&lt;/script&gt;</code></li>
     <li>Inicializarla con <code>toggleDarkMode.init();</code></li>
   </ol>
 
@@ -52,7 +54,35 @@ const toggleDarkMode = (() => {
 })();
   </pre>
 
-  <p>Pulsa el botón flotante 🌙 para cambiar entre modo claro y oscuro.</p>
+  <h3>Explicación línea por línea</h3>
+
+<pre><code>const toggleDarkMode = (() => { ... })();</code></pre>
+<ul>
+  <li>Esto es una IIFE (Immediately Invoked Function Expression), es decir, una función que se ejecuta inmediatamente.</li>
+  <li>Crea un objeto llamado <code>toggleDarkMode</code> que contiene las funciones internas de la librería.</li>
+  <li>De esta forma, todo el código queda encapsulado y no contamina el resto del proyecto.</li>
+</ul>
+
+<pre><code>function toggle() { document.body.classList.toggle("dark"); }</code></pre>
+<ul>
+  <li>Se define una función llamada <code>toggle</code>.</li>
+  <li>Usa <code>document.body.classList.toggle("dark")</code> para:
+    <ul>
+      <li>Si el body no tiene la clase <code>dark</code> → se la agrega.</li>
+      <li>Si ya la tiene → se la quita.</li>
+    </ul>
+  </li>
+  <li>Es el mecanismo que enciende/apaga el modo oscuro.</li>
+</ul>
+
+<pre><code>return { toggle };</code></pre>
+<ul>
+  <li>Aquí se devuelve un objeto con las funciones que se quiere exponer públicamente.</li>
+  <li>En este caso, solo la función <code>toggle</code>.</li>
+  <li>Eso significa que, desde fuera, se podrá usar:
+    <pre><code>toggleDarkMode.toggle();</code></pre>
+  </li>
+</ul>
 
   <script src="modo-oscuro.js"></script>
   <script>
