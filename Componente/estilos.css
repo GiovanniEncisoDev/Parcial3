@@ -14,6 +14,7 @@ body {
   border: 1px solid #ccc;
   padding: 10px;
   max-width: 50%;
+  position: relative;
   overflow: auto;
 }
 
@@ -30,15 +31,25 @@ body {
   padding: 10px;
   max-width: 50%;
   min-height: 300px;
-  overflow-wrap: break-word;
 }
 
-#textContainer span {
-  margin-right: 4px;
-  padding: 2px;
+#textContainer p {
+  margin: 5px 0;
+}
+
+#textContainer p span {
   cursor: pointer;
+  padding: 2px;
+  display: inline-block;
 }
 
-#textContainer span.highlight {
+#textContainer p span:hover {
   background-color: yellow;
+}
+
+#barcodeImg {
+  max-width: 200px;
+  border: 1px solid #000;
+  display: block;
+  margin-top: 5px;
 }

@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OCR</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCR CURP Beta - Campos Automáticos</title>
 
-  <!-- Tesseract.js -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
-  <!-- PDF.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="estilos.css">
+<link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-  <h1>OCR</h1>
-  <p>Sube una <b>imagen</b> o un <b>PDF</b> de tu CURP. El texto reconocido se mostrará a la derecha y podrás editarlo.</p>
+<h1>OCR CURP Beta</h1>
+<p>Sube tu CURP (PDF o imagen). Se extraerán automáticamente CURP, nombre, estado y código de barras.</p>
 
-  <input type="file" id="archivo" accept="image/*,application/pdf">
+<input type="file" id="archivo" accept="image/*,application/pdf">
 
-  <div id="ocrContainer">
-    <div id="previewContainer"></div>
-    <div id="textContainer"></div>
-  </div>
+<div id="ocrContainer">
+  <div id="previewContainer"></div>
+  <div id="textContainer"></div>
+</div>
 
-  <script src="ocr.js"></script>
-  <script>
-    OCRComponent.init({
-      inputId: "archivo",
-      previewId: "previewContainer",
-      outputId: "textContainer"
-    });
-  </script>
+<script src="ocr.js"></script>
+<script>
+OCRComponent.init({
+  inputId: "archivo",
+  previewId: "previewContainer",
+  outputId: "textContainer"
+});
+</script>
 </body>
 </html>

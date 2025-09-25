@@ -1,166 +1,150 @@
 const OCRComponent = (() => {
 
-  let worker = null;
+let worker = null;
 
-  async function init({ inputId, previewId, outputId }) {
-    const input = document.getElementById(inputId);
-    const preview = document.getElementById(previewId);
-    const output = document.getElementById(outputId);
+async function init({ inputId, previewId, outputId }) {
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  const output = document.getElementById(outputId);
 
-    if (!input || !preview || !output) {
-      console.error("Elementos no encontrados");
-      return;
-    }
+  if(!input || !preview || !output) return console.error("Elementos no encontrados");
 
-    if (!worker) {
-      worker = Tesseract.createWorker({
-        logger: m => {
-          if (m.status === "recognizing text") output.innerHTML = `Procesando: ${(m.progress*100).toFixed(2)}%`;
-        },
-        cachePath: "tessdata"
-      });
-      await worker.load();
-      await worker.loadLanguage("spa");
-      await worker.initialize("spa");
-    }
+  // Crear worker Tesseract
+  if(!worker){
+    worker = Tesseract.createWorker({
+      logger: m => {
+        if(m.status === "recognizing text") output.innerHTML = `Procesando: ${(m.progress*100).toFixed(2)}%`;
+        else output.innerHTML = m.status;
+      },
+      cachePath: "tessdata"
+    });
+    await worker.load();
+    await worker.loadLanguage("spa");
+    await worker.initialize("spa");
+  }
 
-    input.addEventListener("change", async e => {
-      const file = e.target.files[0];
-      if (!file) return;
+  input.addEventListener("change", async e => {
+    const file = e.target.files[0];
+    if(!file) return;
 
-      preview.innerHTML = "";
-      output.innerHTML = "Preparando archivo...";
+    preview.innerHTML = "";
+    output.innerHTML = "Preparando archivo...";
 
-      if (file.type === "application/pdf") {
-        const reader = new FileReader();
-        reader.onload = async function(ev) {
-          const typedarray = new Uint8Array(ev.target.result);
-          const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
-          const page = await pdf.getPage(1);
+    if(file.type === "application/pdf"){
+      const reader = new FileReader();
+      reader.onload = async function(ev){
+        const typedarray = new Uint8Array(ev.target.result);
+        const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+        const page = await pdf.getPage(1);
 
-          const viewport = page.getViewport({ scale: 1.5 });
-          const canvasVis = document.createElement("canvas");
-          canvasVis.width = viewport.width;
-          canvasVis.height = viewport.height;
-          const ctxVis = canvasVis.getContext("2d");
-          await page.render({ canvasContext: ctxVis, viewport }).promise;
-          preview.appendChild(canvasVis);
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvasVis = document.createElement("canvas");
+        canvasVis.width = viewport.width;
+        canvasVis.height = viewport.height;
+        const ctxVis = canvasVis.getContext("2d");
+        await page.render({ canvasContext: ctxVis, viewport }).promise;
+        preview.appendChild(canvasVis);
 
-          // Canvas reducido para OCR
-          const scaleOCR = 0.5;
+        // Canvas reducido para OCR
+        const scaleOCR = 0.5;
+        const canvasOCR = document.createElement("canvas");
+        canvasOCR.width = viewport.width * scaleOCR;
+        canvasOCR.height = viewport.height * scaleOCR;
+        const ctxOCR = canvasOCR.getContext("2d");
+        ctxOCR.drawImage(canvasVis, 0, 0, canvasOCR.width, canvasOCR.height);
+
+        runOCRFields(canvasOCR.toDataURL(), output, canvasVis, scaleOCR);
+      };
+      reader.readAsArrayBuffer(file);
+
+    } else {
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        const img = new Image();
+        img.onload = function(){
+          preview.innerHTML = "";
+          preview.appendChild(img);
+
+          const maxWidth = 1000;
+          const scale = Math.min(1, maxWidth/img.width);
           const canvasOCR = document.createElement("canvas");
-          canvasOCR.width = viewport.width * scaleOCR;
-          canvasOCR.height = viewport.height * scaleOCR;
-          const ctxOCR = canvasOCR.getContext("2d");
-          ctxOCR.drawImage(canvasVis, 0, 0, canvasOCR.width, canvasOCR.height);
+          canvasOCR.width = img.width * scale;
+          canvasOCR.height = img.height * scale;
+          const ctx = canvasOCR.getContext("2d");
+          ctx.drawImage(img,0,0,canvasOCR.width,canvasOCR.height);
 
-          runOCRWithLayout(canvasOCR.toDataURL(), output, canvasVis, scaleOCR);
+          runOCRFields(canvasOCR.toDataURL(), output, img, scale);
         };
-        reader.readAsArrayBuffer(file);
-      } else {
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-          const img = new Image();
-          img.onload = function() {
-            preview.innerHTML = "";
-            preview.appendChild(img);
-
-            const maxWidth = 1000;
-            let canvasOCR = document.createElement("canvas");
-            const scale = Math.min(1, maxWidth / img.width);
-            canvasOCR.width = img.width * scale;
-            canvasOCR.height = img.height * scale;
-            const ctx = canvasOCR.getContext("2d");
-            ctx.drawImage(img, 0, 0, canvasOCR.width, canvasOCR.height);
-
-            runOCRWithLayout(canvasOCR.toDataURL(), output, img, scale);
-          };
-          img.src = ev.target.result;
-          img.style.maxWidth = "100%";
-          img.style.display = "block";
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  }
-
-  async function runOCRWithLayout(src, output, img, scaleFactor) {
-    output.innerHTML = "";
-    const { data: { words } } = await worker.recognize(src);
-
-    // Agrupar palabras por línea usando y0
-    words.sort((a,b) => a.bbox.y0 - b.bbox.y0);
-    let lines = [];
-    let currentLine = [];
-    let lastY = -1;
-    const threshold = 10; // px
-
-    words.forEach(word => {
-      const y = word.bbox.y0 / scaleFactor;
-      if (lastY === -1 || Math.abs(y - lastY) < threshold) {
-        currentLine.push(word);
-      } else {
-        lines.push(currentLine);
-        currentLine = [word];
-      }
-      lastY = y;
-    });
-    if(currentLine.length > 0) lines.push(currentLine);
-
-    // Crear DOM por línea
-    lines.forEach(line => {
-      const divLine = document.createElement("div");
-      line.forEach(word => {
-        const span = document.createElement("span");
-        span.textContent = word.text + " ";
-
-        // Posición horizontal
-        const marginLeft = (word.bbox.x0 / scaleFactor);
-        span.style.marginLeft = marginLeft + "px";
-
-        // Hover para resaltar
-        span.addEventListener("mouseenter", () => highlightWord(img, word, scaleFactor));
-        span.addEventListener("mouseleave", () => removeHighlight(img));
-
-        // Click para editar
-        span.addEventListener("click", () => {
-          const nuevo = prompt("Editar palabra:", span.textContent.trim());
-          if (nuevo !== null) span.textContent = nuevo + " ";
-        });
-
-        divLine.appendChild(span);
-      });
-      output.appendChild(divLine);
-    });
-  }
-
-  function highlightWord(img, word, scaleFactor) {
-    const x = word.bbox.x0 / scaleFactor;
-    const y = word.bbox.y0 / scaleFactor;
-    const w = (word.bbox.x1 - word.bbox.x0) / scaleFactor;
-    const h = (word.bbox.y1 - word.bbox.y0) / scaleFactor;
-
-    // Crear overlay temporal
-    if(!img._highlight) {
-      const div = document.createElement("div");
-      div.style.position = "absolute";
-      div.style.border = "2px solid red";
-      div.style.pointerEvents = "none";
-      img.parentElement.style.position = "relative";
-      img.parentElement.appendChild(div);
-      img._highlight = div;
+        img.src = ev.target.result;
+        img.style.maxWidth = "100%";
+      };
+      reader.readAsDataURL(file);
     }
-    const div = img._highlight;
-    div.style.left = x + "px";
-    div.style.top = y + "px";
-    div.style.width = w + "px";
-    div.style.height = h + "px";
-    div.style.display = "block";
+  });
+}
+
+// Función para extraer campos específicos
+async function runOCRFields(src, output, img, scaleFactor){
+  const { data: { words } } = await worker.recognize(src);
+
+  const fullText = words.map(w=>w.text).join(" ");
+
+  // CURP
+  const curpMatch = fullText.match(/[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d/);
+  const curp = curpMatch ? curpMatch[0] : "No encontrado";
+
+  // Código de barras (número de 12+ dígitos)
+  const barcodeMatch = fullText.match(/\d{12,}/);
+  const barcode = barcodeMatch ? barcodeMatch[0] : "No encontrado";
+
+  // Nombre aproximado: palabras antes de CURP
+  let nombre = "No encontrado";
+  let estado = "No encontrado";
+  if(curpMatch){
+    const curpIndex = words.findIndex(w=>w.text.includes(curpMatch[0].slice(0,4)));
+    nombre = words.slice(0,curpIndex).map(w=>w.text).join(" ");
+    estado = words.slice(curpIndex+1,curpIndex+5).map(w=>w.text).join(" ");
   }
 
-  function removeHighlight(img) {
-    if(img._highlight) img._highlight.style.display = "none";
-  }
+  // Mostrar resultados
+  output.innerHTML = "";
+  output.appendChild(createEditableField("CURP", curp));
+  output.appendChild(createEditableField("Nombre", nombre));
+  output.appendChild(createEditableField("Estado", estado));
+  output.appendChild(createEditableField("Código de barras", barcode));
 
-  return { init };
+  // Extraer imagen del código de barras (zona inferior del OCR)
+  const lastWord = words[words.length-1];
+  const x0 = lastWord.bbox.x0 / scaleFactor;
+  const y0 = lastWord.bbox.y0 / scaleFactor;
+  const x1 = lastWord.bbox.x1 / scaleFactor;
+  const y1 = lastWord.bbox.y1 / scaleFactor;
+
+  const canvasBarcode = document.createElement("canvas");
+  canvasBarcode.width = x1 - x0;
+  canvasBarcode.height = y1 - y0;
+  const ctx = canvasBarcode.getContext("2d");
+  ctx.drawImage(img, x0, y0, x1-x0, y1-y0, 0,0, x1-x0, y1-y0);
+
+  const imgEl = document.createElement("img");
+  imgEl.id = "barcodeImg";
+  imgEl.src = canvasBarcode.toDataURL();
+  output.appendChild(imgEl);
+}
+
+// Crear campo editable
+function createEditableField(label, value){
+  const p = document.createElement("p");
+  const span = document.createElement("span");
+  span.textContent = value;
+  span.addEventListener("click", ()=> {
+    const nuevo = prompt(`Editar ${label}:`, span.textContent);
+    if(nuevo!==null) span.textContent = nuevo;
+  });
+  p.innerHTML = `<b>${label}:</b> `;
+  p.appendChild(span);
+  return p;
+}
+
+return { init };
 })();
