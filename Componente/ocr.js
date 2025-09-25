@@ -3,31 +3,26 @@ const OCRComponent = (() => {
   let worker = null;
   let modeloCargado = false;
 
-  async function init({ inputId, outputId, previewId }) {
+  async function init({ inputId, previewId, outputId }) {
     const input = document.getElementById(inputId);
-    const output = document.getElementById(outputId);
     const preview = document.getElementById(previewId);
+    const output = document.getElementById(outputId);
 
-    if (!input || !output || !preview) {
+    if (!input || !preview || !output) {
       console.error("Elementos no encontrados");
       return;
     }
 
-    // Crear worker de Tesseract
+    // Crear worker Tesseract
     if (!worker) {
       worker = Tesseract.createWorker({
         logger: m => {
-          if (m.status === "loading tesseract core") {
-            output.innerHTML = "Cargando OCR, espere...";
-          } else if (m.status === "loading language traineddata") {
-            output.innerHTML = "Descargando modelo de idioma español...";
-          } else if (m.status === "initializing api") {
-            output.innerHTML = "Inicializando OCR...";
-          } else if (m.status === "recognizing text") {
-            output.innerHTML = `Procesando: ${(m.progress * 100).toFixed(2)}%`;
-          }
+          if (m.status === "loading tesseract core") output.innerHTML = "Cargando OCR...";
+          else if (m.status === "loading language traineddata") output.innerHTML = "Descargando modelo español...";
+          else if (m.status === "initializing api") output.innerHTML = "Inicializando OCR...";
+          else if (m.status === "recognizing text") output.innerHTML = `Procesando: ${(m.progress*100).toFixed(2)}%`;
         },
-        cachePath: "tessdata", // usa IndexedDB para cache
+        cachePath: "tessdata"
       });
       await worker.load();
       await worker.loadLanguage("spa");
@@ -42,12 +37,9 @@ const OCRComponent = (() => {
       preview.innerHTML = "";
       output.innerHTML = "Preparando archivo...";
 
-      let srcImage;
-
       if (file.type === "application/pdf") {
-        // Procesar PDF
         const reader = new FileReader();
-        reader.onload = async function (ev) {
+        reader.onload = async function(ev) {
           const typedarray = new Uint8Array(ev.target.result);
           const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
           const page = await pdf.getPage(1);
@@ -61,40 +53,33 @@ const OCRComponent = (() => {
           await page.render({ canvasContext: ctx, viewport }).promise;
           preview.appendChild(canvas);
 
-          srcImage = canvas;
-          processOCR(srcImage, output, canvas);
+          runOCR(canvas.toDataURL(), output, canvas);
         };
         reader.readAsArrayBuffer(file);
       } else {
-        // Procesar imagen
         const reader = new FileReader();
-        reader.onload = function (ev) {
+        reader.onload = function(ev) {
           const img = new Image();
           img.src = ev.target.result;
-          img.style.maxWidth = "400px";
+          img.style.maxWidth = "100%";
           img.style.display = "block";
-          img.id = "ocrPreviewImg";
 
           preview.appendChild(img);
-          srcImage = img;
-          processOCR(srcImage, output, img);
+          runOCR(img.src, output, img);
         };
         reader.readAsDataURL(file);
       }
     });
   }
 
-  async function processOCR(src, output, img) {
-    output.innerHTML = "Procesando OCR...";
+  async function runOCR(src, output, img) {
+    output.innerHTML = "";
 
     const { data: { words } } = await worker.recognize(src);
 
-    output.innerHTML = "";
     words.forEach(word => {
       const span = document.createElement("span");
       span.textContent = word.text + " ";
-      span.style.cursor = "pointer";
-      span.title = "Click para editar";
 
       span.addEventListener("mouseenter", () => highlightWord(img, word));
       span.addEventListener("mouseleave", () => removeHighlight(img));

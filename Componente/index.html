@@ -3,32 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OCR</title>
-  <!-- OCR -->
+  <title>OCR Beta CURP</title>
+
+  <!-- Tesseract.js -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
   <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
-  <script src="ocr.js"></script>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="estilos.css">
-  <style>
-    #preview img { max-width: 400px; display: block; margin-bottom: 10px; }
-    #output span { margin-right: 4px; padding: 2px; }
-  </style>
 </head>
 <body>
-  <h1>OCR </h1>
-
-  <p>Sube una <b>imagen</b> o un <b>PDF</b> de tu CURP. El texto reconocido se mostrará y podrás editarlo si algo está mal.</p>
+  <h1>OCR Beta - CURP</h1>
+  <p>Sube una <b>imagen</b> o un <b>PDF</b> de tu CURP. El texto reconocido se mostrará a la derecha y podrás editarlo.</p>
 
   <input type="file" id="archivo" accept="image/*,application/pdf">
-  <div id="preview"></div>
-  <div id="output"></div>
 
+  <div id="ocrContainer">
+    <div id="previewContainer"></div>
+    <div id="textContainer"></div>
+  </div>
+
+  <script src="ocr.js"></script>
   <script>
     OCRComponent.init({
       inputId: "archivo",
-      outputId: "output",
-      previewId: "preview"
+      previewId: "previewContainer",
+      outputId: "textContainer"
     });
   </script>
 </body>
