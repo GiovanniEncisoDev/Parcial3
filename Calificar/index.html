@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rating Component Flexible</title>
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+<h2>Calificación de películas (estrellas)</h2>
+<div id="rating1"></div>
+
+<h2>Calificación veterinaria (huellitas)</h2>
+<div id="rating2"></div>
+
+<script src="rating.js"></script>
+<script>
+  // Estrellas por defecto, relleno dorado
+  RatingComponent.init({
+    containerId: "rating1",
+    max: 5,
+    allowHalf: true,
+    mode: "fill",
+    fillColor: "#FFD700",
+    onChange: (val) => console.log("Rating películas:", val)
+  });
+
+  // Cine v2
+    RatingComponent.init({
+    containerId: "rating3",
+    max: 5,
+    icon: "img/palomitas-de-maiz.png",
+    iconSize: 40,
+    allowHalf: true,
+    mode: "fill",
+    fillColor: "#FFAA00",
+    onChange: (val) => console.log("Rating películas:", val)
+  });
+
+  // Huellitas PNG locales, inicialmente en blanco y negro, al calificar se rellena
+  RatingComponent.init({
+    containerId: "rating2",
+    max: 5,
+    icon: "img/huella.png",
+    iconSize: 40,
+    allowHalf: true,
+    mode: "fill",
+    fillColor: "#FFAA00",
+    onChange: (val) => console.log("Rating veterinaria:", val)
+  });
+</script>
+
+</body>
+</html>

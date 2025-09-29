@@ -1,0 +1,36 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+#rating1, #rating2 {
+  margin-bottom: 30px;
+}
+
+.rating-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.icon {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: grayscale(100%);
+  position: relative;
+  cursor: pointer;
+  transition: filter 0.3s, background-color 0.3s;
+}
+
+.icon.filled::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: gold;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
