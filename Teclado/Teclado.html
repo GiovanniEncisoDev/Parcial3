@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Teclado Virtual</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #f0f0f0;
+    }
+
+    #input-area {
+      width: 90%;
+      max-width: 400px;
+      height: 40px;
+      margin-bottom: 15px;
+      padding: 8px;
+      font-size: 18px;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+    }
+
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 5px;
+      max-width: 500px;
+    }
+
+    .key {
+      padding: 12px;
+      font-size: 16px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .key:active {
+      background: #ddd;
+    }
+
+    .wide {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+  <h2>Teclado Virtual</h2>
+  <!-- Barra de prueba -->
+  <input type="text" id="input-area" placeholder="Escribe aquí...">
+  <div class="keyboard" id="keyboard"></div>
+
+  <script>
+    (function(){
+      const inputArea = document.getElementById("input-area");
+      const keyboard = document.getElementById("keyboard");
+
+      const keys = [
+        "1","2","3","4","5","6","7","8","9","0",
+        "q","w","e","r","t","y","u","i","o","p",
+        "a","s","d","f","g","h","j","k","l",
+        "z","x","c","v","b","n","m",
+        "Espacio","Borrar"
+      ];
+
+      keys.forEach(key => {
+        const button = document.createElement("div");
+        button.classList.add("key");
+        button.textContent = key;
+
+        if (key === "Espacio" || key === "Borrar") {
+          button.classList.add("wide");
+        }
+
+        button.addEventListener("click", () => {
+          if (key === "Borrar") {
+            inputArea.value = inputArea.value.slice(0, -1);
+          } else if (key === "Espacio") {
+            inputArea.value += " ";
+          } else {
+            inputArea.value += key;
+          }
+        });
+
+        keyboard.appendChild(button);
+      });
+    })();
+  </script>
+</body>
+</html>
