@@ -35,6 +35,10 @@
         <ul id="task-list"></ul>
     </div>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
+<script type="module">
+  import { createVirtualKeyboard } from './keyboard.js';
+  createVirtualKeyboard('task-input'); // el input de "Nueva tarea..."
+</script>
 </body>
 </html>
